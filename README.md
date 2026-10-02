@@ -12,8 +12,20 @@ Kannel bearerbox, Kannel smppbox and KSMPPD.** One small Python process watches 
 see every customer (ESME), SMSC link, TPS limit and delivery report on one Grafana screen, and get alerts before
 your customers notice.
 
+![Kannel bearerbox Grafana dashboard: SMSC operator links, MT and DLR throughput per SMSC-ID, failure rates and SMSC usernames](docs/images/kannel-smsc-links.png)
+
 ![Architecture of the SMPP Prometheus exporter: Kannel smppbox, KSMPPD and Kannel bearerbox gateways scraped centrally, stored in Prometheus, shown in Grafana, alerted by Alertmanager](docs/images/architecture.svg)
 
+
+## Screenshots
+
+<sub>Real production dashboards; server, customer, operator and IP names replaced with dummy values.</sub>
+
+| Kannel bearerbox | KSMPPD | Kannel smppbox |
+|---|---|---|
+| [![Kannel overview: servers up, MT/DLR/MO rates, failure %, SMSC links online, queues](docs/images/kannel-overview.png)](docs/images/kannel-overview.png) | [![KSMPPD overview: TPS limit vs achieved TPS, utilisation and headroom per customer (ESME)](docs/images/ksmppd-overview-tps-limits.png)](docs/images/ksmppd-overview-tps-limits.png) | [![smppbox overview: sessions per customer, submit and deliver rates, open acks, store size](docs/images/smppbox-overview.png)](docs/images/smppbox-overview.png) |
+| [![Kannel gateways: build info, gateway health and peak MT/DLR/MO throughput per server and SMSC route](docs/images/kannel-gateways-peak-throughput.png)](docs/images/kannel-gateways-peak-throughput.png) | [![KSMPPD servers and peak throughput per server, customer and bind](docs/images/ksmppd-servers-peak-throughput.png)](docs/images/ksmppd-servers-peak-throughput.png) | [![smppbox gateways: build info and peak throughput per server, customer and SMPP session](docs/images/smppbox-gateways-peak-throughput.png)](docs/images/smppbox-gateways-peak-throughput.png) |
+| [![Kannel SMSC usernames: queue and DLR ratio per SMSC-ID, MT rate and link availability gauges per operator account](docs/images/kannel-smsc-usernames.png)](docs/images/kannel-smsc-usernames.png) | [![KSMPPD per-customer submit, deliver, error rate and DLR ratio graphs](docs/images/ksmppd-customer-traffic-errors.png)](docs/images/ksmppd-customer-traffic-errors.png) | [![smppbox traffic: overall throughput, submit and deliver rate per server, gateway load and queues](docs/images/smppbox-traffic.png)](docs/images/smppbox-traffic.png) |
 
 ## Why?
 
