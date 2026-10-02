@@ -1,0 +1,12 @@
+# Real exporter configs contain status passwords - only *.example.yml is committed
+exporters/*/config.yml
+*_exporter.yml
+!*.example.yml
+deploy/docker/.env
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+

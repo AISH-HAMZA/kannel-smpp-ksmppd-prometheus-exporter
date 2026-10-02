@@ -1,0 +1,36 @@
+[project]
+name = "smpp-prometheus-exporter"
+version = "1.0.0"
+description = "Prometheus exporters and Grafana dashboards for SMPP / SMS gateways: Kannel bearerbox, Kannel smppbox and KSMPPD"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.8"
+dependencies = ["prometheus_client>=0.17", "PyYAML>=6.0"]
+keywords = ["smpp", "kannel", "ksmppd", "smppbox", "sms-gateway", "prometheus", "exporter", "grafana", "monitoring"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Topic :: System :: Monitoring",
+  "Topic :: Communications :: Telephony",
+  "Operating System :: POSIX :: Linux",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.5"]
+
+[project.urls]
+Homepage = "https://github.com/AISH-HAMZA/smpp-prometheus-exporter"
+Issues = "https://github.com/AISH-HAMZA/smpp-prometheus-exporter/issues"
+Changelog = "https://github.com/AISH-HAMZA/smpp-prometheus-exporter/blob/main/CHANGELOG.md"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 130
+target-version = "py38"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B"]
+ignore = ["E701", "E731", "E741", "E742"]   # compact single-file style: one-line classes, short names
+# The dashboard generators exec() a shared helper file, so names defined there look undefined to ruff.
+per-file-ignores = { "tools/gen_*_dashboard.py" = ["F821", "F405", "E501"], "tools/smppbox_desc.py" = ["F821", "E501"] }
