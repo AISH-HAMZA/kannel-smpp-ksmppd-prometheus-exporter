@@ -1,0 +1,10 @@
+# Grafana provisioning: copy to /etc/grafana/provisioning/dashboards/ and copy dashboards/*.json
+# to /var/lib/grafana/dashboards/smpp/ - Grafana loads (and reloads) them automatically.
+apiVersion: 1
+providers:
+  - name: smpp-exporter
+    folder: SMS Gateways
+    type: file
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards/smpp

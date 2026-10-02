@@ -1,0 +1,9 @@
+# Grafana provisioning: copy to /etc/grafana/provisioning/datasources/ and set your Prometheus URL.
+apiVersion: 1
+datasources:
+  - name: Prometheus
+    uid: prometheus
+    type: prometheus
+    access: proxy
+    url: http://localhost:9090
+    isDefault: true
