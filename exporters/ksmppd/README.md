@@ -1,5 +1,7 @@
 # KSMPPD exporter
 
+**Deploy:** `sudo ./deploy/install.sh ksmppd --local --password PW` (on the KSMPPD server) or `--target NAME=URL` (central) – see [docs/deploy-ksmppd.md](../../docs/deploy-ksmppd.md).
+
 `ksmppd_exporter.py` – v1.2.0 – port **9878** – scrapes `esme-status.xml` (or the plain-text `esme-status`)
 and `uptime.xml` of every ksmppd. Field meanings verified against the ksmppd source (`smpp_esme.c`, `smpp_queues.c`).
 

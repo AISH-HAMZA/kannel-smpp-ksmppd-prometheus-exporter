@@ -1,5 +1,7 @@
 # smppbox exporter (Kannel / Kannel-HA smppbox)
 
+**Deploy:** `sudo ./deploy/install.sh smppbox --local --password PW` (on the Kannel smppbox server) or `--target NAME=URL` (central) – see [docs/deploy-smppbox.md](../../docs/deploy-smppbox.md).
+
 `smpp_exporter.py` – v1.2.0 – port **9877** – scrapes `status.xml` of every smppbox.
 
 ## Direction convention (smppbox point of view)

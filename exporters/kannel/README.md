@@ -1,5 +1,7 @@
 # Kannel bearerbox exporter
 
+**Deploy:** `sudo ./deploy/install.sh kannel --local --password PW` (on the Kannel bearerbox server) or `--target NAME=URL` (central) – see [docs/deploy-kannel.md](../../docs/deploy-kannel.md).
+
 `kannel_exporter.py` – v1.1.0 – port **9879** – scrapes the bearerbox `status.xml`.
 Works for vanilla Kannel 1.4.x (apt), SVN builds (`svn-r5336M`) and Kannel-HA (`svn-b-r430`).
 Verified against the Kannel 1.4.5 source (`gw/bearerbox.c`, `gw/bb_smscconn.c`) and tested live with the real

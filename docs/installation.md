@@ -11,6 +11,10 @@ Prometheus alert rules and Grafana dashboards. Pick the deployment style that fi
 | [Single node](#4-single-node-all-in-one) | gateway + exporter + Prometheus + Grafana on one box | labs, small installs |
 | [Docker in production](#5-docker-in-production) | containers next to your Prometheus | container-based monitoring stacks |
 
+> **Fastest way:** `sudo ./deploy/install.sh <kannel|smppbox|ksmppd> --local --password PW` (same node) or
+> `--target NAME=URL ...` (central). Step-by-step per gateway: [Kannel](deploy-kannel.md) ·
+> [smppbox](deploy-smppbox.md) · [KSMPPD](deploy-ksmppd.md). This page explains the manual installation.
+
 Ports used by the exporters: **smppbox 9877**, **KSMPPD 9878**, **Kannel 9879** (`/metrics`).
 
 ---
