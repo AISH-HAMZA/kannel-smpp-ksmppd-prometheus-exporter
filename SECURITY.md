@@ -5,7 +5,7 @@ Only the latest release receives fixes.
 
 ## Reporting a vulnerability
 Please **do not open a public issue**. Use GitHub's
-[private vulnerability reporting](https://github.com/AISH-HAMZA/smpp-prometheus-exporter/security/advisories/new).
+[private vulnerability reporting](https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter/security/advisories/new).
 You will get an answer within 7 days.
 
 ## Hardening notes

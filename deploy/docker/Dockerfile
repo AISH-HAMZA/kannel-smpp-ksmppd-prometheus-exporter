@@ -1,6 +1,6 @@
 # One image for all three exporters. Pick one at runtime with EXPORTER=smppbox|ksmppd|kannel
 # (or at build time: --build-arg EXPORTER=kannel).  Build from the repository root:
-#   docker build -f deploy/docker/Dockerfile -t smpp-prometheus-exporter .
+#   docker build -f deploy/docker/Dockerfile -t kannel-smpp-ksmppd-prometheus-exporter .
 FROM python:3.12-slim
 
 ARG EXPORTER=kannel

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Starts the exporter selected by $EXPORTER with the config at $CONFIG. Extra arguments are passed through,
-# e.g.  docker run ... smpp-prometheus-exporter --once
+# e.g.  docker run ... kannel-smpp-ksmppd-prometheus-exporter --once
 set -e
 case "$EXPORTER" in
   smppbox) exec python /app/exporters/smppbox/smpp_exporter.py --config "$CONFIG" "$@" ;;

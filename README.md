@@ -1,16 +1,26 @@
-# SMPP Prometheus Exporter – Kannel, smppbox & KSMPPD monitoring with Grafana
+# Kannel, smppbox & KSMPPD Prometheus Exporter – SMPP / SMS gateway monitoring with Grafana
 
-[![CI](https://github.com/AISH-HAMZA/smpp-prometheus-exporter/actions/workflows/ci.yml/badge.svg)](https://github.com/AISH-HAMZA/smpp-prometheus-exporter/actions/workflows/ci.yml)
+[![CI](https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter/actions/workflows/ci.yml/badge.svg)](https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 ![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-3776AB?logo=python&logoColor=white)
 ![Prometheus](https://img.shields.io/badge/Prometheus-exporter-E6522C?logo=prometheus&logoColor=white)
 ![Grafana](https://img.shields.io/badge/Grafana-dashboards-F46800?logo=grafana&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)
 
-**Production-tested Prometheus exporters, Grafana dashboards and alert rules for SMS / SMPP gateways:
-Kannel bearerbox, Kannel smppbox and KSMPPD.** One small Python process watches all your gateway servers, so you can
-see every customer (ESME), SMSC link, TPS limit and delivery report on one Grafana screen, and get alerts before
-your customers notice.
+**Open-source monitoring for SMS gateways that speak SMPP.** This project turns the built-in status pages of
+**Kannel bearerbox**, **Kannel smppbox** and **KSMPPD** into Prometheus metrics, and ships ready-made Grafana
+dashboards and alert rules on top of them.
+
+* **What you see:** traffic per gateway server, per customer (ESME) and per operator link (SMSC) – messages sent (MT),
+  received (MO) and delivery reports (DLR), throughput against TPS limits, queues, failures, connection state and
+  uptime – from a fleet overview down to a single customer or link.
+* **How it works:** a small Python exporter reads each gateway's HTTP status page and exposes the numbers on a
+  `/metrics` endpoint. Run it on the gateway server itself, or run **one** exporter centrally that watches many
+  gateway servers. Nothing has to be installed on or changed in the gateways.
+* **Why:** spot a failing operator link, a customer hitting its TPS limit or a growing queue *before* your customers
+  notice – with alerts sent through Prometheus Alertmanager.
+
+Production-tested on busy A2P SMS platforms. Works with Prometheus-compatible stacks (VictoriaMetrics, Mimir, Thanos).
 
 ![Kannel bearerbox Grafana dashboard: SMSC operator links, MT and DLR throughput per SMSC-ID, failure rates and SMSC usernames](docs/images/kannel-smsc-links.png)
 
@@ -48,8 +58,8 @@ metrics:
 No gateway needed. A mock gateway generates realistic, fictional traffic.
 
 ```bash
-git clone https://github.com/AISH-HAMZA/smpp-prometheus-exporter.git
-cd smpp-prometheus-exporter/deploy/docker
+git clone https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter.git
+cd kannel-smpp-ksmppd-prometheus-exporter/deploy/docker
 docker compose up -d --build
 ```
 
@@ -68,7 +78,7 @@ and a test scrape.
 | **KSMPPD** | `sudo ./deploy/install.sh ksmppd --local --password 'PW'` | `sudo ./deploy/install.sh ksmppd --target ksmppd-a=http://192.0.2.20:14000/esme-status.xml?password=PW` | [deploy-ksmppd.md](docs/deploy-ksmppd.md) |
 
 ```bash
-git clone https://github.com/AISH-HAMZA/smpp-prometheus-exporter.git && cd smpp-prometheus-exporter
+git clone https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter.git && cd kannel-smpp-ksmppd-prometheus-exporter
 sudo ./deploy/install.sh kannel --local --password 'STATUS_PASSWORD'      # example: Kannel, same node
 ```
 
@@ -142,7 +152,7 @@ More in the [FAQ](docs/faq.md).
 - [ ] Jasmin SMS gateway and OpenSMPPBox support
 - [ ] Optional per-target labels (site, environment)
 
-Ideas welcome in [Discussions](https://github.com/AISH-HAMZA/smpp-prometheus-exporter/discussions).
+Ideas welcome in [Discussions](https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter/discussions).
 
 ## Contributing
 

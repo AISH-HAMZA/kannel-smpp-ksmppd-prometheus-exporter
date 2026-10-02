@@ -44,6 +44,6 @@ First public release. Bundles smppbox exporter 1.2.0, KSMPPD exporter 1.2.0 and 
 - Kannel: SMSC state timeline coloured everything red – now threshold based.
 - All dashboards: split table rows – every table query is wrapped in `max by (<keys>)`.
 
-[Unreleased]: https://github.com/AISH-HAMZA/smpp-prometheus-exporter/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/AISH-HAMZA/smpp-prometheus-exporter/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/AISH-HAMZA/smpp-prometheus-exporter/releases/tag/v1.0.0
+[Unreleased]: https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter/releases/tag/v1.0.0

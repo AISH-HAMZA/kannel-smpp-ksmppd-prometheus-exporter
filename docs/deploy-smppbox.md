@@ -22,8 +22,8 @@ Monitor Kannel smppbox and Kannel-HA smppbox with Prometheus and Grafana. Pick *
 3. Get the code on the server that will run the exporter:
 
    ```bash
-   git clone https://github.com/AISH-HAMZA/smpp-prometheus-exporter.git
-   cd smpp-prometheus-exporter
+   git clone https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter.git
+   cd kannel-smpp-ksmppd-prometheus-exporter
    ```
 
 ## Way 1 – same node (exporter on the Kannel smppbox server)
@@ -64,8 +64,8 @@ Add or remove gateways later: edit `/opt/smpp-exporter/smppbox/config.yml`, then
 
 ```bash
 cp exporters/smppbox/config.example.yml /etc/smppbox-exporter.yml        # edit targets + passwords
-docker build -f deploy/docker/Dockerfile -t smpp-prometheus-exporter .
-docker run -d --name smppbox-exporter --restart unless-stopped --network host   -e EXPORTER=smppbox -v /etc/smppbox-exporter.yml:/etc/smpp-exporter/config.yml:ro smpp-prometheus-exporter
+docker build -f deploy/docker/Dockerfile -t kannel-smpp-ksmppd-prometheus-exporter .
+docker run -d --name smppbox-exporter --restart unless-stopped --network host   -e EXPORTER=smppbox -v /etc/smppbox-exporter.yml:/etc/smpp-exporter/config.yml:ro kannel-smpp-ksmppd-prometheus-exporter
 ```
 
 (`--network host` lets the container reach `127.0.0.1` in same-node mode.)
@@ -89,7 +89,7 @@ journalctl -u smppbox_exporter -n 30
 ## Update or remove
 
 ```bash
-cd smpp-prometheus-exporter && git pull && sudo ./deploy/install.sh smppbox        # updates the code, keeps your config
+cd kannel-smpp-ksmppd-prometheus-exporter && git pull && sudo ./deploy/install.sh smppbox        # updates the code, keeps your config
 sudo ./deploy/install.sh smppbox --uninstall            # add --purge to also delete the config
 ```
 

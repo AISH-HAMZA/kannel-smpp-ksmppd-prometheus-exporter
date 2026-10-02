@@ -6,8 +6,8 @@ versions, new panels and docs fixes are all welcome.
 ## Development setup
 
 ```bash
-git clone https://github.com/AISH-HAMZA/smpp-prometheus-exporter.git
-cd smpp-prometheus-exporter
+git clone https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter.git
+cd kannel-smpp-ksmppd-prometheus-exporter
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements-dev.txt
 ruff check . && pytest            # lint + parser, end-to-end and dashboard tests

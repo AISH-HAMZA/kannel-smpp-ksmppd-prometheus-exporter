@@ -53,7 +53,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build image
-        run: docker build -f deploy/docker/Dockerfile -t smpp-prometheus-exporter:ci .
+        run: docker build -f deploy/docker/Dockerfile -t kannel-smpp-ksmppd-prometheus-exporter:ci .
       - name: Smoke test the demo stack
         run: |
           cd deploy/docker

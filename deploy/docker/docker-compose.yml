@@ -9,7 +9,7 @@ x-exporter: &exporter
   build:
     context: ../..
     dockerfile: deploy/docker/Dockerfile
-  image: smpp-prometheus-exporter:local
+  image: kannel-smpp-ksmppd-prometheus-exporter:local
   restart: unless-stopped
   depends_on: [mock-gateway]
 

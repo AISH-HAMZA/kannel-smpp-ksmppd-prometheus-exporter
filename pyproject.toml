@@ -1,7 +1,7 @@
 [project]
-name = "smpp-prometheus-exporter"
+name = "kannel-smpp-ksmppd-prometheus-exporter"
 version = "1.1.0"
-description = "Prometheus exporters and Grafana dashboards for SMPP / SMS gateways: Kannel bearerbox, Kannel smppbox and KSMPPD"
+description = "Prometheus exporters, Grafana dashboards and alert rules for SMS / SMPP gateways: Kannel bearerbox, Kannel smppbox and KSMPPD"
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.8"
@@ -18,9 +18,9 @@ classifiers = [
 dev = ["pytest>=7", "ruff>=0.5"]
 
 [project.urls]
-Homepage = "https://github.com/AISH-HAMZA/smpp-prometheus-exporter"
-Issues = "https://github.com/AISH-HAMZA/smpp-prometheus-exporter/issues"
-Changelog = "https://github.com/AISH-HAMZA/smpp-prometheus-exporter/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter"
+Issues = "https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter/issues"
+Changelog = "https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter/blob/main/CHANGELOG.md"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

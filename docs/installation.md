@@ -51,8 +51,8 @@ Needs Docker with the compose plugin. No real gateway is needed – a mock gatew
 status pages with live, moving counters.
 
 ```bash
-git clone https://github.com/AISH-HAMZA/smpp-prometheus-exporter.git
-cd smpp-prometheus-exporter/deploy/docker
+git clone https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter.git
+cd kannel-smpp-ksmppd-prometheus-exporter/deploy/docker
 docker compose up -d --build
 ```
 
@@ -86,8 +86,8 @@ flowchart LR
 
 ```bash
 sudo apt install -y python3 python3-pip          # RHEL/Rocky: sudo dnf install -y python3 python3-pip
-git clone https://github.com/AISH-HAMZA/smpp-prometheus-exporter.git
-cd smpp-prometheus-exporter
+git clone https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter.git
+cd kannel-smpp-ksmppd-prometheus-exporter
 sudo pip3 install -r requirements.txt            # prometheus_client, PyYAML
 # Debian 12+/Ubuntu 23.04+ block system-wide pip: use  sudo apt install -y python3-prometheus-client python3-yaml
 
@@ -223,13 +223,13 @@ Scrape `localhost:9877-9879`. Note that Debian's Prometheus package listens on 9
 Build once and run one container per exporter type with your own config:
 
 ```bash
-docker build -f deploy/docker/Dockerfile -t smpp-prometheus-exporter .
+docker build -f deploy/docker/Dockerfile -t kannel-smpp-ksmppd-prometheus-exporter .
 docker run -d --name kannel-exporter --restart unless-stopped \
   -e EXPORTER=kannel -p 9879:9879 \
   -v /etc/smpp-exporter/kannel.yml:/etc/smpp-exporter/config.yml:ro \
-  smpp-prometheus-exporter
+  kannel-smpp-ksmppd-prometheus-exporter
 docker run --rm -e EXPORTER=kannel -v /etc/smpp-exporter/kannel.yml:/etc/smpp-exporter/config.yml:ro \
-  smpp-prometheus-exporter --once | grep _up          # test
+  kannel-smpp-ksmppd-prometheus-exporter --once | grep _up          # test
 ```
 
 `EXPORTER` = `smppbox` | `ksmppd` | `kannel`. The image runs as a non-root user and has a health check on `/metrics`.
@@ -240,7 +240,7 @@ For compose, copy `deploy/docker/docker-compose.yml`, drop the `mock-gateway` se
 ## Upgrade
 
 ```bash
-cd smpp-prometheus-exporter && git pull
+cd kannel-smpp-ksmppd-prometheus-exporter && git pull
 sudo cp exporters/kannel/kannel_exporter.py /opt/smpp-exporter/kannel/   # same for the others
 sudo systemctl restart kannel_exporter
 python3 /opt/smpp-exporter/kannel/kannel_exporter.py --version

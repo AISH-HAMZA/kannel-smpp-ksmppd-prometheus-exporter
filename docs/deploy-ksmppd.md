@@ -22,8 +22,8 @@ Monitor KSMPPD (XML `esme-status.xml` or plain-text `esme-status`) with Promethe
 3. Get the code on the server that will run the exporter:
 
    ```bash
-   git clone https://github.com/AISH-HAMZA/smpp-prometheus-exporter.git
-   cd smpp-prometheus-exporter
+   git clone https://github.com/AISH-HAMZA/kannel-smpp-ksmppd-prometheus-exporter.git
+   cd kannel-smpp-ksmppd-prometheus-exporter
    ```
 
 ## Way 1 – same node (exporter on the KSMPPD server)
@@ -64,8 +64,8 @@ Add or remove gateways later: edit `/opt/smpp-exporter/ksmppd/config.yml`, then 
 
 ```bash
 cp exporters/ksmppd/config.example.yml /etc/ksmppd-exporter.yml        # edit targets + passwords
-docker build -f deploy/docker/Dockerfile -t smpp-prometheus-exporter .
-docker run -d --name ksmppd-exporter --restart unless-stopped --network host   -e EXPORTER=ksmppd -v /etc/ksmppd-exporter.yml:/etc/smpp-exporter/config.yml:ro smpp-prometheus-exporter
+docker build -f deploy/docker/Dockerfile -t kannel-smpp-ksmppd-prometheus-exporter .
+docker run -d --name ksmppd-exporter --restart unless-stopped --network host   -e EXPORTER=ksmppd -v /etc/ksmppd-exporter.yml:/etc/smpp-exporter/config.yml:ro kannel-smpp-ksmppd-prometheus-exporter
 ```
 
 (`--network host` lets the container reach `127.0.0.1` in same-node mode.)
@@ -89,7 +89,7 @@ journalctl -u ksmppd_exporter -n 30
 ## Update or remove
 
 ```bash
-cd smpp-prometheus-exporter && git pull && sudo ./deploy/install.sh ksmppd        # updates the code, keeps your config
+cd kannel-smpp-ksmppd-prometheus-exporter && git pull && sudo ./deploy/install.sh ksmppd        # updates the code, keeps your config
 sudo ./deploy/install.sh ksmppd --uninstall            # add --purge to also delete the config
 ```
 
