@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-03
+
+### Added
+- `deploy/install.sh`: one-command install of a single exporter, same node (`--local`) or central (`--target`),
+  with config generation, systemd service, test scrape, upgrade (keeps config) and `--uninstall`.
+- Step-by-step deployment guides per gateway: `docs/deploy-kannel.md`, `docs/deploy-smppbox.md`, `docs/deploy-ksmppd.md`.
+- Dashboard screenshots: five per gateway (sanitised – all names and IPs are dummy values).
+- CI tests the installer against the mock gateway.
+
 ## [1.0.0] - 2026-10-03
 
 First public release. Bundles smppbox exporter 1.2.0, KSMPPD exporter 1.2.0 and Kannel bearerbox exporter 1.1.0.
@@ -35,5 +44,6 @@ First public release. Bundles smppbox exporter 1.2.0, KSMPPD exporter 1.2.0 and 
 - Kannel: SMSC state timeline coloured everything red – now threshold based.
 - All dashboards: split table rows – every table query is wrapped in `max by (<keys>)`.
 
-[Unreleased]: https://github.com/AISH-HAMZA/smpp-prometheus-exporter/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/AISH-HAMZA/smpp-prometheus-exporter/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/AISH-HAMZA/smpp-prometheus-exporter/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/AISH-HAMZA/smpp-prometheus-exporter/releases/tag/v1.0.0
