@@ -1,0 +1,49 @@
+# ksmppd_alerts.yml - Prometheus alert rules for ksmppd_exporter.  prometheus.yml: rule_files: [...]
+groups:
+- name: ksmppd
+  rules:
+  - alert: KsmppdDown
+    expr: ksmppd_up == 0
+    for: 2m
+    labels: {severity: critical}
+    annotations: {summary: "ksmppd {{ $labels.server }} status page unreachable"}
+  - alert: KsmppdRestarted
+    expr: ksmppd_uptime_seconds < 300
+    labels: {severity: warning}
+    annotations: {summary: "ksmppd {{ $labels.server }} restarted {{ $value | humanizeDuration }} ago"}
+  - alert: KsmppdCustomerDisconnected
+    expr: ksmppd_esme_connected == 0 and (ksmppd_esme_connected offset 1h) == 1
+    for: 5m
+    labels: {severity: warning}
+    annotations: {summary: "Customer {{ $labels.esme }} on {{ $labels.server }} has no binds"}
+  - alert: KsmppdHighErrorRate
+    expr: |
+      100 * rate(ksmppd_esme_errors_total[10m])
+        / ((rate(ksmppd_esme_mt_total[10m]) + rate(ksmppd_esme_errors_total[10m])) > 0.1) > 10
+    for: 10m
+    labels: {severity: warning}
+    annotations: {summary: "Customer {{ $labels.esme }} on {{ $labels.server }}: {{ $value | printf \"%.1f\" }}% submits rejected"}
+  - alert: KsmppdThrottled
+    expr: ksmppd_esme_load_pdus_per_second{direction="inbound",window="1m"} / (ksmppd_esme_throughput_limit > 0) > 0.9
+    for: 10m
+    labels: {severity: warning}
+    annotations: {summary: "Customer {{ $labels.esme }} on {{ $labels.server }} is at >90% of its throughput limit"}
+  - alert: KsmppdBindsExhausted
+    expr: ksmppd_esme_binds >= ksmppd_esme_max_binds and ksmppd_esme_max_binds > 0
+    for: 15m
+    labels: {severity: info}
+    annotations: {summary: "Customer {{ $labels.esme }} on {{ $labels.server }} uses all {{ $value }} allowed binds"}
+  - alert: KsmppdQueueBuildup
+    expr: sum by (server) (ksmppd_esme_queued) + sum by (server) (ksmppd_esme_pending_routing) > 500
+    for: 5m
+    labels: {severity: warning}
+    annotations: {summary: "{{ $value }} PDUs queued / pending routing on {{ $labels.server }}"}
+  - alert: KsmppdBindFlapping
+    expr: sum by (server, esme) (increase(ksmppd_esme_bind_disconnects_total[15m])) > 10
+    labels: {severity: warning}
+    annotations: {summary: "Customer {{ $labels.esme }} on {{ $labels.server }} dropped {{ $value }} binds in 15 min"}
+  - alert: KsmppdSimulateMode
+    expr: ksmppd_esme_simulate_binds > 0
+    for: 5m
+    labels: {severity: info}
+    annotations: {summary: "Customer {{ $labels.esme }} on {{ $labels.server }} has binds in simulate mode"}

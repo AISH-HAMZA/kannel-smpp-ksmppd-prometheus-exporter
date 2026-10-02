@@ -1,0 +1,61 @@
+# kannel_alerts.yml - Prometheus alert rules for kannel_exporter.  prometheus.yml: rule_files: [...]
+groups:
+- name: kannel
+  rules:
+  - alert: KannelDown
+    expr: kannel_up == 0
+    for: 2m
+    labels: {severity: critical}
+    annotations: {summary: "Kannel {{ $labels.server }} status page unreachable (down or wrong password)"}
+  - alert: KannelNotRunning
+    expr: kannel_gateway_state{state="running"} == 0
+    for: 2m
+    labels: {severity: critical}
+    annotations: {summary: "bearerbox {{ $labels.server }} is not in 'running' state (suspended / isolated / full)"}
+  - alert: KannelRestarted
+    expr: kannel_uptime_seconds < 300
+    labels: {severity: warning}
+    annotations: {summary: "bearerbox {{ $labels.server }} restarted {{ $value | humanizeDuration }} ago"}
+  - alert: KannelSmscLinkDown
+    expr: kannel_smsc_online == 0 and (kannel_smsc_online offset 30m) == 1
+    for: 5m
+    labels: {severity: critical}
+    annotations: {summary: "SMSC link {{ $labels.admin_id }} ({{ $labels.smsc_id }}) on {{ $labels.server }} is not online"}
+  - alert: KannelSmscRouteDown
+    expr: sum by (server, smsc_id) (kannel_smsc_online) == 0 and sum by (server, smsc_id) (kannel_smsc_online offset 30m) > 0
+    for: 2m
+    labels: {severity: critical}
+    annotations: {summary: "All links of SMSC route {{ $labels.smsc_id }} on {{ $labels.server }} are down"}
+  - alert: KannelSmscFlapping
+    expr: increase(kannel_smsc_state_drops_total[15m]) >= 3
+    labels: {severity: warning}
+    annotations: {summary: "SMSC link {{ $labels.admin_id }} on {{ $labels.server }} dropped {{ $value }} times in 15 min"}
+  - alert: KannelHighFailureRate
+    expr: |
+      100 * sum by (server, smsc_id) (rate(kannel_smsc_failed_total[10m]))
+        / (sum by (server, smsc_id) (rate(kannel_smsc_sms_total{direction="sent"}[10m]) + rate(kannel_smsc_failed_total[10m])) > 0.1) > 10
+    for: 10m
+    labels: {severity: warning}
+    annotations: {summary: "SMSC route {{ $labels.smsc_id }} on {{ $labels.server }}: {{ $value | printf \"%.1f\" }}% MT failing"}
+  - alert: KannelSmscQueueBuildup
+    expr: sum by (server, smsc_id) (kannel_smsc_queued) > 1000
+    for: 10m
+    labels: {severity: warning}
+    annotations: {summary: "{{ $value }} MT queued for SMSC route {{ $labels.smsc_id }} on {{ $labels.server }}"}
+  - alert: KannelBearerboxQueueBuildup
+    expr: sum by (server) (kannel_sms_queued) > 1000
+    for: 10m
+    labels: {severity: warning}
+    annotations: {summary: "{{ $value }} messages queued in bearerbox {{ $labels.server }}"}
+  - alert: KannelNoSmsbox
+    expr: sum by (server) (kannel_boxes_connected{box_type="smsbox"}) == 0
+    for: 2m
+    labels: {severity: critical}
+    annotations: {summary: "No smsbox connected to bearerbox {{ $labels.server }}"}
+  - alert: KannelDlrRatioLow
+    expr: |
+      100 * sum by (server, smsc_id) (rate(kannel_smsc_dlr_total{direction="received"}[30m]))
+        / (sum by (server, smsc_id) (rate(kannel_smsc_sms_total{direction="sent"}[30m])) > 1) < 50
+    for: 30m
+    labels: {severity: info}
+    annotations: {summary: "DLR ratio of {{ $labels.smsc_id }} on {{ $labels.server }} is {{ $value | printf \"%.0f\" }}%"}

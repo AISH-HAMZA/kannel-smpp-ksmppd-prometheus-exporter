@@ -1,0 +1,70 @@
+# smppbox_alerts.yml  -  Prometheus alert rules for smpp_exporter
+# prometheus.yml:   rule_files: ["/etc/prometheus/smppbox_alerts.yml"]
+groups:
+- name: smppbox
+  rules:
+  - alert: SmppboxDown
+    expr: smppbox_up == 0
+    for: 2m
+    labels: {severity: critical}
+    annotations:
+      summary: "smppbox {{ $labels.server }} status page unreachable"
+
+  - alert: SmppboxBearerboxDisconnected
+    expr: smppbox_bearerbox_connected == 0
+    for: 1m
+    labels: {severity: critical}
+    annotations:
+      summary: "smppbox {{ $labels.server }} lost its bearerbox connection"
+
+  - alert: SmppboxRestarted
+    expr: smppbox_uptime_seconds < 300
+    labels: {severity: warning}
+    annotations:
+      summary: "smppbox {{ $labels.server }} restarted {{ $value | humanizeDuration }} ago"
+
+  - alert: SmppboxQueueBuildup
+    expr: sum by (server) (smppbox_queued_messages) > 1000 or smppbox_store_size_messages > 10000
+    for: 5m
+    labels: {severity: warning}
+    annotations:
+      summary: "Messages piling up on {{ $labels.server }} ({{ $value }})"
+
+  - alert: SmppCustomerOffline
+    expr: smppbox_login_online == 0 and (smppbox_login_online offset 1h) == 1
+    for: 5m
+    labels: {severity: warning}
+    annotations:
+      summary: "Customer {{ $labels.esme }} on {{ $labels.server }} went offline"
+
+  - alert: SmppCustomerHighFailureRate
+    expr: |
+      100 * sum by (server, esme) (rate(smppbox_esme_messages_failed_total[10m]))
+        / (sum by (server, esme) (rate(smppbox_esme_messages_received_total[10m])) > 0.1) > 10
+    for: 10m
+    labels: {severity: warning}
+    annotations:
+      summary: "Customer {{ $labels.esme }} on {{ $labels.server }} failing {{ $value | printf \"%.1f\" }}%"
+
+  - alert: SmppCustomerTrafficStopped
+    expr: |
+      sum by (server, esme) (rate(smppbox_esme_messages_received_total[15m])) == 0
+        and sum by (server, esme) (rate(smppbox_esme_messages_received_total[15m] offset 1d)) > 0.5
+    for: 15m
+    labels: {severity: warning}
+    annotations:
+      summary: "Customer {{ $labels.esme }} on {{ $labels.server }} stopped submitting (normally active now)"
+
+  - alert: SmppboxDbPoolExhausted
+    expr: smppbox_plugin_db_connections_idle / smppbox_plugin_db_connections_max < 0.1
+    for: 5m
+    labels: {severity: warning}
+    annotations:
+      summary: "DB plugin {{ $labels.plugin }} on {{ $labels.server }} has <10% idle connections"
+
+  - alert: SmppboxPluginInactive
+    expr: smppbox_plugin_active == 0
+    for: 2m
+    labels: {severity: warning}
+    annotations:
+      summary: "Plugin {{ $labels.plugin }} ({{ $labels.chain }}) inactive on {{ $labels.server }}"
