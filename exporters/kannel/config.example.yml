@@ -1,0 +1,28 @@
+# config.yml - config for kannel_exporter.py
+# Copy to config.yml and set the real status/admin passwords.
+# CLI flags override values here.  Reload targets live:  systemctl reload kannel_exporter
+# Ports in use by the other exporters: smppbox 9877, ksmppd 9878  ->  kannel 9879
+
+listen_address: 0.0.0.0
+port: 9879
+scrape_interval: 15         # seconds between scrape cycles of all bearerboxes
+timeout: 10                 # default per-server HTTP timeout (s)
+max_workers: 16             # servers scraped in parallel
+disable_process_metrics: true
+log_level: INFO
+
+# name = value of the `server` label in Grafana.  URL = bearerbox admin port /status.xml with the
+# status-password (or admin-password).  Works for vanilla Kannel (apt / SVN) and Kannel-HA.
+targets:
+  - name: kannel-a
+    url: http://192.0.2.30:12000/status.xml?password=CHANGE_ME
+  - name: kannel-ha-a
+    url: http://192.0.2.31:12000/status.xml?password=CHANGE_ME
+  - name: kannel-ha-b
+    url: http://192.0.2.32:12000/status.xml?password=CHANGE_ME
+  - name: kannel-b
+    url: http://192.0.2.33:12000/status.xml?password=CHANGE_ME
+  # - name: kannel-example
+  #   url: https://198.51.100.5:13000/status.xml?password=xxx
+  #   timeout: 5
+  #   insecure: true        # skip TLS verification (admin port with SSL)
