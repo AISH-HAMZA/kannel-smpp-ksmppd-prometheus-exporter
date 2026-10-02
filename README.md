@@ -19,13 +19,15 @@ your customers notice.
 
 ## Screenshots
 
-<sub>Real production dashboards; server, customer, operator and IP names replaced with dummy values.</sub>
+<sub>Real production dashboards; server, customer, operator and IP names replaced with dummy values. Click to enlarge.</sub>
 
 | Kannel bearerbox | KSMPPD | Kannel smppbox |
 |---|---|---|
 | [![Kannel overview: servers up, MT/DLR/MO rates, failure %, SMSC links online, queues](docs/images/kannel-overview.png)](docs/images/kannel-overview.png) | [![KSMPPD overview: TPS limit vs achieved TPS, utilisation and headroom per customer (ESME)](docs/images/ksmppd-overview-tps-limits.png)](docs/images/ksmppd-overview-tps-limits.png) | [![smppbox overview: sessions per customer, submit and deliver rates, open acks, store size](docs/images/smppbox-overview.png)](docs/images/smppbox-overview.png) |
-| [![Kannel gateways: build info, gateway health and peak MT/DLR/MO throughput per server and SMSC route](docs/images/kannel-gateways-peak-throughput.png)](docs/images/kannel-gateways-peak-throughput.png) | [![KSMPPD servers and peak throughput per server, customer and bind](docs/images/ksmppd-servers-peak-throughput.png)](docs/images/ksmppd-servers-peak-throughput.png) | [![smppbox gateways: build info and peak throughput per server, customer and SMPP session](docs/images/smppbox-gateways-peak-throughput.png)](docs/images/smppbox-gateways-peak-throughput.png) |
-| [![Kannel SMSC usernames: queue and DLR ratio per SMSC-ID, MT rate and link availability gauges per operator account](docs/images/kannel-smsc-usernames.png)](docs/images/kannel-smsc-usernames.png) | [![KSMPPD per-customer submit, deliver, error rate and DLR ratio graphs](docs/images/ksmppd-customer-traffic-errors.png)](docs/images/ksmppd-customer-traffic-errors.png) | [![smppbox traffic: overall throughput, submit and deliver rate per server, gateway load and queues](docs/images/smppbox-traffic.png)](docs/images/smppbox-traffic.png) |
+| [![Kannel gateways: build info, gateway health and peak MT/DLR/MO per server and SMSC route](docs/images/kannel-gateways-peak-throughput.png)](docs/images/kannel-gateways-peak-throughput.png) | [![KSMPPD servers and peak throughput per server, customer and bind](docs/images/ksmppd-servers-peak-throughput.png)](docs/images/ksmppd-servers-peak-throughput.png) | [![smppbox gateways: build info and peak throughput per server, customer and SMPP session](docs/images/smppbox-gateways-peak-throughput.png)](docs/images/smppbox-gateways-peak-throughput.png) |
+| [![Kannel SMSC operator links: state, MT/DLR per link, top-10 SMSC-IDs by traffic and failures](docs/images/kannel-smsc-links.png)](docs/images/kannel-smsc-links.png) | [![KSMPPD customer overview table and top-10 customers by MT, errors and error %](docs/images/ksmppd-customers-overview.png)](docs/images/ksmppd-customers-overview.png) | [![smppbox server health (CPU, memory, sessions) and customer (ESME) connection overview](docs/images/smppbox-servers-customers.png)](docs/images/smppbox-servers-customers.png) |
+| [![Kannel traffic: MT, DLR and MO per bearerbox server, bearerbox load, queues and waiting DLRs](docs/images/kannel-traffic-per-server.png)](docs/images/kannel-traffic-per-server.png) | [![KSMPPD per-customer submit, deliver, error rate, achieved TPS and DLR ratio](docs/images/ksmppd-customer-traffic-errors.png)](docs/images/ksmppd-customer-traffic-errors.png) | [![smppbox top-10 customers by volume and failures, submit and deliver rate per customer](docs/images/smppbox-customer-traffic.png)](docs/images/smppbox-customer-traffic.png) |
+| [![Kannel SMSC usernames: operator account overview, availability, MT and DLR per SMSC username](docs/images/kannel-smsc-username-overview.png)](docs/images/kannel-smsc-username-overview.png) | [![KSMPPD SMPP binds: transceiver/transmitter/receiver binds, bind details and connections by source IP](docs/images/ksmppd-binds-sessions.png)](docs/images/ksmppd-binds-sessions.png) | [![smppbox traffic: overall throughput, submit and deliver rate per server, gateway load and queues](docs/images/smppbox-traffic.png)](docs/images/smppbox-traffic.png) |
 
 ## Why?
 
@@ -53,20 +55,25 @@ docker compose up -d --build
 
 Open **http://localhost:3000** (admin / admin) → folder *SMS Gateways*. Prometheus: http://localhost:9090.
 
-## Production install (central mode)
+## Deploy only what you run
+
+Each exporter is independent – install just the one for your gateway, **on the gateway server itself** (same node)
+or **on one monitoring server for many gateways** (central). One command does it: files, config, systemd service
+and a test scrape.
+
+| Your gateway | Same node (on the gateway server) | Central (one server, many gateways) | Guide |
+|---|---|---|---|
+| **Kannel bearerbox** | `sudo ./deploy/install.sh kannel --local --password 'PW'` | `sudo ./deploy/install.sh kannel --target kannel-a=http://192.0.2.30:13000/status.xml?password=PW` | [deploy-kannel.md](docs/deploy-kannel.md) |
+| **Kannel smppbox** | `sudo ./deploy/install.sh smppbox --local --password 'PW'` | `sudo ./deploy/install.sh smppbox --target smppbox-a=http://192.0.2.10:14000/status.xml?password=PW` | [deploy-smppbox.md](docs/deploy-smppbox.md) |
+| **KSMPPD** | `sudo ./deploy/install.sh ksmppd --local --password 'PW'` | `sudo ./deploy/install.sh ksmppd --target ksmppd-a=http://192.0.2.20:14000/esme-status.xml?password=PW` | [deploy-ksmppd.md](docs/deploy-ksmppd.md) |
 
 ```bash
-sudo pip3 install -r requirements.txt
-sudo mkdir -p /opt/smpp-exporter/kannel
-sudo cp exporters/kannel/kannel_exporter.py /opt/smpp-exporter/kannel/
-sudo cp exporters/kannel/config.example.yml /opt/smpp-exporter/kannel/config.yml   # add gateways + status passwords
-python3 /opt/smpp-exporter/kannel/kannel_exporter.py -c /opt/smpp-exporter/kannel/config.yml --once | grep _up
-sudo cp deploy/systemd/kannel_exporter.service /etc/systemd/system/ && sudo systemctl enable --now kannel_exporter
+git clone https://github.com/AISH-HAMZA/smpp-prometheus-exporter.git && cd smpp-prometheus-exporter
+sudo ./deploy/install.sh kannel --local --password 'STATUS_PASSWORD'      # example: Kannel, same node
 ```
 
-Do the same for `smppbox` / `ksmppd`, add the [scrape jobs](deploy/prometheus/prometheus-scrape.example.yml), import
-`dashboards/*.json` into Grafana and copy `alerts/*.yml` to Prometheus.
-**Full guide (central, per-node, single-node, Docker):** [docs/installation.md](docs/installation.md).
+Repeat `--target NAME=URL` for every gateway in central mode. Then add the printed scrape job to Prometheus and import
+`dashboards/<gateway>_dashboard.json` into Grafana. Manual install, Docker and all options: [docs/installation.md](docs/installation.md).
 
 ## The three exporters
 
@@ -123,6 +130,7 @@ More in the [FAQ](docs/faq.md).
 
 ## Documentation
 
+[Deploy Kannel](docs/deploy-kannel.md) · [Deploy smppbox](docs/deploy-smppbox.md) · [Deploy KSMPPD](docs/deploy-ksmppd.md) ·
 [Installation](docs/installation.md) · [Configuration](docs/configuration.md) · [Metrics](docs/metrics.md) ·
 [Architecture](docs/architecture.md) · [Troubleshooting](docs/troubleshooting.md) · [FAQ](docs/faq.md) ·
 [Design notes](docs/design-notes.md) · [Changelog](CHANGELOG.md)
