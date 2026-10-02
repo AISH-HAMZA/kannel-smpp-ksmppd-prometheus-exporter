@@ -1,0 +1,13 @@
+name: Feature request
+description: A new metric, panel, alert, gateway type or deployment option
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+    validations: {required: true}
+  - type: textarea
+    id: idea
+    attributes:
+      label: Proposed solution

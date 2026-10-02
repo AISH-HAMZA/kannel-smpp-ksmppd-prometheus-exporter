@@ -1,0 +1,34 @@
+name: Bug report
+description: An exporter, dashboard or alert does not behave as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "**Remove passwords, IPs and customer names** from anything you paste."
+  - type: dropdown
+    id: exporter
+    attributes:
+      label: Exporter
+      options: [smppbox, ksmppd, kannel, dashboards / alerts, docker]
+    validations: {required: true}
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: "Exporter (`--version`), gateway version (status page), Prometheus, Grafana, Python"
+    validations: {required: true}
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened and what did you expect?
+    validations: {required: true}
+  - type: textarea
+    id: output
+    attributes:
+      label: Output of `--once` / logs (sanitised)
+      render: text
+  - type: textarea
+    id: page
+    attributes:
+      label: Sanitised status page excerpt (helps a lot for parser bugs)
+      render: xml

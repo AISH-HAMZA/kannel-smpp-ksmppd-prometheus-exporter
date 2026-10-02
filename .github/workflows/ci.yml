@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.8", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -r requirements-dev.txt
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Tests (pytest)
+        run: pytest -v
+      - name: Dashboards are up to date with their generators
+        run: |
+          for f in tools/gen_*_dashboard.py; do python "$f"; done
+          git diff --exit-code dashboards/
+      - name: Dashboard JSON is valid
+        run: for f in dashboards/*.json; do python -m json.tool "$f" > /dev/null; done
+
+  promtool:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check alert rules and Prometheus configs
+        run: |
+          docker run --rm -v "$PWD:/w" -w /w --entrypoint promtool prom/prometheus:v3.5.0 check rules alerts/*.yml
+          docker run --rm -v "$PWD:/w" -w /w/deploy/docker --entrypoint promtool prom/prometheus:v3.5.0 check config --syntax-only prometheus.yml
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -f deploy/docker/Dockerfile -t smpp-prometheus-exporter:ci .
+      - name: Smoke test the demo stack
+        run: |
+          cd deploy/docker
+          docker compose up -d --build mock-gateway smppbox-exporter ksmppd-exporter kannel-exporter
+          sleep 40
+          curl -sf localhost:9877/metrics | grep 'smppbox_up{server="smppbox-a"} 1.0'
+          curl -sf localhost:9878/metrics | grep 'ksmppd_up{server="ksmppd-b"} 1.0'
+          curl -sf localhost:9879/metrics | grep 'kannel_up{server="kannel-ha-a"} 1.0'
+          docker compose down
