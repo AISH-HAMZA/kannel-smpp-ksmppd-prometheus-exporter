@@ -29,6 +29,13 @@ jobs:
         run: |
           for f in tools/gen_*_dashboard.py; do python "$f"; done
           git diff --exit-code dashboards/
+      - name: Installer works (central + same-node, no systemd)
+        run: |
+          python examples/mock_gateway.py --port 18080 & sleep 2
+          bash deploy/install.sh kannel --prefix /tmp/i --no-systemd             --target kannel-a=http://127.0.0.1:18080/kannel-a/status.xml?password=demo | tee /tmp/k.log
+          grep -q 'kannel_up{server="kannel-a"} 1.0' /tmp/k.log
+          bash deploy/install.sh ksmppd --prefix /tmp/i --no-systemd --local --name ksmppd-a             --url "http://127.0.0.1:18080/ksmppd-a/esme-status.xml?password=demo" | tee /tmp/s.log
+          grep -q 'ksmppd_up{server="ksmppd-a"} 1.0' /tmp/s.log
       - name: Dashboard JSON is valid
         run: for f in dashboards/*.json; do python -m json.tool "$f" > /dev/null; done
 
