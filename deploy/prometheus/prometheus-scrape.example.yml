@@ -1,0 +1,23 @@
+# Add to prometheus.yml (scrape_configs:). Replace 192.0.2.50 with the host that runs the exporters
+# (central mode: one monitoring node; per-node mode: list every gateway server under targets).
+scrape_configs:
+  - job_name: smppbox_exporter            # Kannel / Kannel-HA smppbox
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['192.0.2.50:9877']
+
+  - job_name: ksmppd_exporter             # KSMPPD
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['192.0.2.50:9878']
+
+  - job_name: kannel_exporter             # Kannel bearerbox (vanilla / SVN / Kannel-HA)
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['192.0.2.50:9879']
+
+# Alert rules (optional) - copy alerts/*.yml next to prometheus.yml:
+rule_files:
+  - smppbox_alerts.yml
+  - ksmppd_alerts.yml
+  - kannel_alerts.yml

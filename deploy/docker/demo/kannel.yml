@@ -1,0 +1,12 @@
+# Demo config: scrapes the mock gateway container. For production start from exporters/kannel/config.example.yml
+listen_address: 0.0.0.0
+port: 9879
+scrape_interval: 15
+timeout: 10
+disable_process_metrics: true
+log_level: INFO
+targets:
+  - name: kannel-a
+    url: http://mock-gateway:8080/kannel-a/status.xml?password=demo
+  - name: kannel-ha-a
+    url: http://mock-gateway:8080/kannel-ha-a/status.xml?password=demo

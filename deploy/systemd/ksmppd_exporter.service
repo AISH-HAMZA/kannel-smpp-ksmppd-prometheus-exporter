@@ -1,0 +1,19 @@
+[Unit]
+Description=KSMPPD Prometheus exporter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/smpp-exporter/ksmppd/ksmppd_exporter.py --config /opt/smpp-exporter/ksmppd/config.yml
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+User=nobody
+Group=nogroup
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

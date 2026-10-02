@@ -1,0 +1,13 @@
+# Demo config: scrapes the mock gateway container. For production start from exporters/smppbox/config.example.yml
+listen_address: 0.0.0.0
+port: 9877
+scrape_interval: 15
+timeout: 10
+disable_process_metrics: true
+per_session_metrics: true
+log_level: INFO
+targets:
+  - name: smppbox-a
+    url: http://mock-gateway:8080/smppbox-a/status.xml?password=demo
+  - name: smppbox-b
+    url: http://mock-gateway:8080/smppbox-b/status.xml?password=demo

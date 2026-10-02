@@ -1,0 +1,14 @@
+# Demo config: scrapes the mock gateway container. For production start from exporters/ksmppd/config.example.yml
+listen_address: 0.0.0.0
+port: 9878
+scrape_interval: 15
+timeout: 10
+disable_process_metrics: true
+per_bind_metrics: true
+fetch_uptime: true
+log_level: INFO
+targets:
+  - name: ksmppd-a
+    url: http://mock-gateway:8080/ksmppd-a/esme-status.xml?password=demo
+  - name: ksmppd-b
+    url: http://mock-gateway:8080/ksmppd-b/esme-status?password=demo

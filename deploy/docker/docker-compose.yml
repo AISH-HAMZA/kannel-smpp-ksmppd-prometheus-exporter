@@ -1,0 +1,68 @@
+# SMPP Prometheus exporter - demo stack
+#   cd deploy/docker && docker compose up -d      ->  Grafana http://localhost:3000  (admin / admin, or .env)
+# A mock gateway serves fictional smppbox, KSMPPD and Kannel status pages with live counters, so the
+# dashboards fill up without any real SMS gateway. For production point the configs in demo/ at your gateways
+# (or mount your own) and remove the mock-gateway service.
+name: smpp-exporter-demo
+
+x-exporter: &exporter
+  build:
+    context: ../..
+    dockerfile: deploy/docker/Dockerfile
+  image: smpp-prometheus-exporter:local
+  restart: unless-stopped
+  depends_on: [mock-gateway]
+
+services:
+  mock-gateway:
+    <<: *exporter
+    depends_on: []
+    environment: {EXPORTER: mock, MOCK_PASSWORD: "${MOCK_PASSWORD:-demo}"}
+    ports: ["8080:8080"]
+
+  smppbox-exporter:
+    <<: *exporter
+    environment: {EXPORTER: smppbox}
+    volumes: ["./demo/smppbox.yml:/etc/smpp-exporter/config.yml:ro"]
+    ports: ["9877:9877"]
+
+  ksmppd-exporter:
+    <<: *exporter
+    environment: {EXPORTER: ksmppd}
+    volumes: ["./demo/ksmppd.yml:/etc/smpp-exporter/config.yml:ro"]
+    ports: ["9878:9878"]
+
+  kannel-exporter:
+    <<: *exporter
+    environment: {EXPORTER: kannel}
+    volumes: ["./demo/kannel.yml:/etc/smpp-exporter/config.yml:ro"]
+    ports: ["9879:9879"]
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    restart: unless-stopped
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--web.enable-admin-api", "--storage.tsdb.retention.time=7d"]
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ../../alerts:/etc/prometheus/alerts:ro
+      - prometheus-data:/prometheus
+    ports: ["9090:9090"]
+
+  grafana:
+    image: grafana/grafana-oss:12.1.0
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: "${GRAFANA_ADMIN_USER:-admin}"
+      GF_SECURITY_ADMIN_PASSWORD: "${GRAFANA_ADMIN_PASSWORD:-admin}"
+      GF_USERS_DEFAULT_THEME: dark
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/kannel_dashboard.json
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../../dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports: ["3000:3000"]
+    depends_on: [prometheus]
+
+volumes:
+  prometheus-data:
+  grafana-data:
