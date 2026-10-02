@@ -1,0 +1,26 @@
+# config.yml - config for ksmppd_exporter.py
+# Copy to config.yml and set the real status passwords.
+# CLI flags override values here.  Reload targets live:  systemctl reload ksmppd_exporter
+
+listen_address: 0.0.0.0
+port: 9878                  # /metrics port (the smppbox exporter uses 9877)
+scrape_interval: 15         # seconds between scrape cycles of all ksmppd servers
+timeout: 10                 # default per-server HTTP timeout (s)
+max_workers: 16             # servers scraped in parallel
+per_bind_metrics: true      # per-bind (session) metrics: bind id, ip, type, counters, loads
+fetch_uptime: true          # also read /uptime.xml for ksmppd uptime
+series_retention: 86400     # forget customers not seen for this many seconds
+disable_process_metrics: true
+log_level: INFO
+
+# name = value of the `server` label in Grafana.  Use esme-status.xml (preferred) or esme-status.
+targets:
+  - name: ksmppd-a
+    url: http://192.0.2.20:14000/esme-status.xml?password=CHANGE_ME
+  - name: ksmppd-b
+    url: http://192.0.2.21:14000/esme-status.xml?password=CHANGE_ME
+  # - name: ksmppd-example
+  #   url: https://198.51.100.5:14000/esme-status.xml?password=xxx
+  #   timeout: 5
+  #   insecure: true        # skip TLS verification
+  #   uptime: false         # don't call /uptime.xml for this server
