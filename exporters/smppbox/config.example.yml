@@ -1,0 +1,32 @@
+# config.yml - config for smpp_exporter.py (Kannel / Kannel-HA smppbox)
+# Copy to config.yml, set the real status passwords. CLI flags override values here.
+# Reload targets live:  systemctl reload smpp_exporter
+
+listen_address: 0.0.0.0
+port: 9877                  # /metrics port (ksmppd 9878, kannel 9879)
+scrape_interval: 15         # seconds between scrape cycles of all status pages
+timeout: 10                 # default per-target HTTP timeout (s)
+max_workers: 16             # status pages scraped in parallel
+per_session_metrics: true   # per-session (ip+port) metrics - needed for the session peak table
+hide_plugin_args: false     # true = don't expose plugin URLs/regex as a label
+series_retention: 86400     # keep counters of vanished customers/IPs this many seconds
+max_customer_rate: 20000    # msg/s; larger jumps between two scrapes are treated as glitches
+disable_process_metrics: true
+log_level: INFO
+
+# name = value of the `server` label in Grafana. Keep names stable.
+targets:
+  - name: smppbox-a
+    url: http://192.0.2.10:14000/status.xml?password=CHANGE_ME
+  - name: smppbox-b
+    url: http://192.0.2.11:14000/status.xml?password=CHANGE_ME
+  - name: smppbox-c
+    url: http://192.0.2.12:14000/status.xml?password=CHANGE_ME
+  - name: smppbox-d
+    url: http://192.0.2.13:14000/status.xml?password=CHANGE_ME
+    timeout: 5
+  # - name: EXAMPLE-HTTPS
+  #   url: https://198.51.100.5:14000/status.xml?password=xxx
+  #   insecure: true          # skip TLS verification
+  #   username: admin         # optional HTTP basic auth
+  #   password: secret
