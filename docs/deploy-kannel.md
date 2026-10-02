@@ -101,5 +101,5 @@ Metrics: [metrics.md](metrics.md) · Exporter details: [exporters/kannel](../exp
 ![Kannel bearerbox Grafana dashboard: overview](images/kannel-overview.png)
 ![Kannel bearerbox Grafana dashboard: gateways peak throughput](images/kannel-gateways-peak-throughput.png)
 ![Kannel bearerbox Grafana dashboard: smsc links](images/kannel-smsc-links.png)
-![Kannel bearerbox Grafana dashboard: smsc usernames](images/kannel-smsc-usernames.png)
+![Kannel bearerbox Grafana dashboard: SMSC username overview](images/kannel-smsc-username-overview.png)
 ![Kannel bearerbox Grafana dashboard: traffic per server](images/kannel-traffic-per-server.png)
