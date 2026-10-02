@@ -1,0 +1,14 @@
+Unique known ESME's: 4
+Total inbound processed: 4853481 load: 75.18/107.40/104.17
+Total outbound processed: 12596 load: 73.03/105.25/102.03
+
+ESME_DEMO_01 - binds:2/4, total inbound load:(68.11/69.47/73.33)/100/sec, outbound load:(66.68/66.68/71.86)/sec, mt/mo/dlr/errors:(3208799/175/8075/62)
+-- id:1 ip:203.0.113.40 uptime:0d 4h 31m 54s, type:3, open-acks:1, simulate: no, inbound (load/queued/processed/routing):34.06/0/1604399/0, outbound (load/queued/processed):33.34/0/4125, mt/mo/dlr/errors:1604399/87/4037/31
+-- id:2 ip:203.0.113.40 uptime:0d 10h 59m 18s, type:2, open-acks:1, simulate: no, inbound (load/queued/processed/routing):34.06/0/1604399/0, outbound (load/queued/processed):33.34/0/4125, mt/mo/dlr/errors:1604399/87/4037/31
+ESME_DEMO_02 - binds:2/4, total inbound load:(31.08/31.71/31.09)/50/sec, outbound load:(30.18/30.18/30.47)/sec, mt/mo/dlr/errors:(1203731/74/3371/32)
+-- id:11 ip:203.0.113.41 uptime:0d 10h 6m 25s, type:3, open-acks:5, simulate: no, inbound (load/queued/processed/routing):15.54/0/601865/0, outbound (load/queued/processed):15.09/0/1722, mt/mo/dlr/errors:601865/37/1685/16
+-- id:12 ip:203.0.113.41 uptime:0d 2h 34m 26s, type:2, open-acks:1, simulate: no, inbound (load/queued/processed/routing):15.54/0/601865/0, outbound (load/queued/processed):15.09/0/1722, mt/mo/dlr/errors:601865/37/1685/16
+ESME_DEMO_03 - binds:1/4, total inbound load:(7.31/7.45/7.01)/20/sec, outbound load:(6.92/6.92/6.87)/sec, mt/mo/dlr/errors:(360840/16/778/7)
+-- id:21 ip:203.0.113.42 uptime:0d 6h 56m 4s, type:3, open-acks:4, simulate: no, inbound (load/queued/processed/routing):7.31/0/360840/0, outbound (load/queued/processed):6.92/0/795, mt/mo/dlr/errors:360840/16/778/7
+ESME_DEMO_04 - binds:1/4, total inbound load:(0.90/0.91/0.91)/10/sec, outbound load:(0.86/0.86/0.90)/sec, mt/mo/dlr/errors:(80109/2/101/1)
+-- id:31 ip:203.0.113.43 uptime:0d 11h 11m 37s, type:3, open-acks:3, simulate: no, inbound (load/queued/processed/routing):0.90/0/80109/0, outbound (load/queued/processed):0.86/0/103, mt/mo/dlr/errors:80109/2/101/1
