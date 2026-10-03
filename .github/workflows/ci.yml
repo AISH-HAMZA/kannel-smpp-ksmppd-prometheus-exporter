@@ -16,7 +16,7 @@ jobs:
       matrix:
         python: ["3.8", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
@@ -42,7 +42,7 @@ jobs:
   promtool:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Check alert rules and Prometheus configs
         run: |
           docker run --rm -v "$PWD:/w" -w /w --entrypoint promtool prom/prometheus:v3.5.0 check rules alerts/*.yml
@@ -51,7 +51,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build image
         run: docker build -f deploy/docker/Dockerfile -t kannel-smpp-ksmppd-prometheus-exporter:ci .
       - name: Smoke test the demo stack
